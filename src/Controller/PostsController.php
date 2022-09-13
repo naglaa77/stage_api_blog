@@ -2,17 +2,24 @@
 
 namespace App\Controller;
 
+use App\Repository\PostsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PostsController extends AbstractController
 {
-    #[Route('/posts', name: 'app_posts')]
-    public function index(): Response
+    #[Route('/api/posts', name: 'posts',methods: ['GET'])]
+    public function getPostList(PostsRepository $postsRepository): JsonResponse
     {
-        return $this->render('posts/index.html.twig', [
-            'controller_name' => 'PostsController',
+
+        $postList = $postsRepository->findAll()  ;  
+    
+        return new JsonResponse([
+        
+            'posts' => $postList,
+        
         ]);
     }
 }
