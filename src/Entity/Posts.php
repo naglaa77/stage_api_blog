@@ -26,6 +26,9 @@ class Posts
     #[ORM\Column(length: 255)]
     private ?string $createBy = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $imageUrl = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class Posts
     public function setCreateBy(string $createBy): self
     {
         $this->createBy = $createBy;
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(string $imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }

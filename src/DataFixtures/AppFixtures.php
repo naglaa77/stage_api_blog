@@ -6,6 +6,7 @@ use Faker\Factory;
 use App\Entity\Posts;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use phpDocumentor\Reflection\DocBlock\Tags\Reference\Url;
 
 class AppFixtures extends Fixture
 {
@@ -21,6 +22,7 @@ class AppFixtures extends Fixture
             $livre->setContenu($faker->text);
             $livre->setCreateAt($faker->dateTime);
             $livre->setCreateBy($faker->firstName);
+            $livre->setImageUrl($faker->imageUrl());
             $manager->persist($livre);
         }
 
