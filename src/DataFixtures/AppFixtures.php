@@ -25,8 +25,8 @@ class AppFixtures extends Fixture
         $faker = Factory::create('fr_FR');
         for ($i = 0; $i < 20; $i++) {
             $livre = new Posts;
-            $livre->setTitre($faker->sentence);
-            $livre->setContenu($faker->text);
+            $livre->setTitre("text");
+            $livre->setContenu("text");
             $livre->setCreateAt($faker->dateTime);
             $livre->setCreateBy($faker->firstName);
             $livre->setImageUrl($faker->imageUrl());
