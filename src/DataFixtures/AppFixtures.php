@@ -47,8 +47,8 @@ class AppFixtures extends Fixture
         $userAdmin->setEmail("admin@bookapi.com");
         $userAdmin->setRoles(["ROLE_ADMIN"]);
         $userAdmin->setPassword($this->userPasswordHasher->hashPassword($userAdmin, "password"));
-        $user->setFullName('admin');
-         $user->setPhoneNumro('0750256897');
+         $userAdmin->setFullName('admin');
+          $userAdmin->setPhoneNumro('0750256897');
         $manager->persist($userAdmin);
     
 
