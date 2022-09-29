@@ -6,6 +6,10 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+#[UniqueEntity('email')]
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -15,27 +19,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+  #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min:2,max:50)]
+    private ?string $fullName = null;
+
     #[ORM\Column(length: 180, unique: true)]
+   
+    #[Assert\NotBlank()]
+    #[Assert\Email()]
+    #[Assert\Length(min:2,max:180)]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Assert\NotNull()]
     private array $roles = [];
 
+   #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
+    private ?string $phoneNumro = null;
+
+    private ?string $plainPassword = null;
     /**
      * @var string 
      */
     #[ORM\Column]
+    #[Assert\NotBlank()]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $fullName = null;
+  
 
-    #[ORM\Column(length: 255)]
-    private ?string $phoneNumro = null;
+ 
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+
+    public function getFullName(): ?string
+    {
+        return $this->fullName;
+    }
+
+    public function setFullName(string $fullName): self
+    {
+        $this->fullName = $fullName;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -88,6 +131,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPhoneNumro(): ?string
+    {
+        return $this->phoneNumro;
+    }
+
+    public function setPhoneNumro(string $phoneNumro): self
+    {
+        $this->phoneNumro = $phoneNumro;
+
+        return $this;
+    }
+
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -112,27 +167,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFullName(): ?string
-    {
-        return $this->fullName;
-    }
 
-    public function setFullName(string $fullName): self
-    {
-        $this->fullName = $fullName;
 
-        return $this;
-    }
 
-    public function getPhoneNumro(): ?string
-    {
-        return $this->phoneNumro;
-    }
-
-    public function setPhoneNumro(string $phoneNumro): self
-    {
-        $this->phoneNumro = $phoneNumro;
-
-        return $this;
-    }
 }
