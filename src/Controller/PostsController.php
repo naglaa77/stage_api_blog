@@ -14,7 +14,7 @@ class PostsController extends AbstractController
     #[Route('/api/posts', name: 'posts',methods: ['GET'])]
     public function getPostList(PostsRepository $postsRepository,SerializerInterface $serializer): JsonResponse
     {
-
+        // $this->denyAccessUnlessGranted('ROLE_USER');
         $postList = $postsRepository->findAll()  ;  
         $jsonPostList = $serializer->serialize( $postList, 'json');
 

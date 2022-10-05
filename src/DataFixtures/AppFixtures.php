@@ -37,8 +37,8 @@ class AppFixtures extends Fixture
         $user->setEmail("user@bookapi.com");
         $user->setRoles(["ROLE_USER"]);
         $user->setPassword($this->userPasswordHasher->hashPassword($user, "password"));
-        $user->setFullName('naglaa');
-        $user->setPhoneNumro('0770377294');
+        $user->setName('naglaa');
+        $user->setPhone('0770377294');
             
         $manager->persist($user);
 
@@ -47,8 +47,8 @@ class AppFixtures extends Fixture
         $userAdmin->setEmail("admin@bookapi.com");
         $userAdmin->setRoles(["ROLE_ADMIN"]);
         $userAdmin->setPassword($this->userPasswordHasher->hashPassword($userAdmin, "password"));
-         $userAdmin->setFullName('admin');
-          $userAdmin->setPhoneNumro('0750256897');
+         $userAdmin->setName('admin');
+          $userAdmin->setPhone('0750256897');
         $manager->persist($userAdmin);
     
 

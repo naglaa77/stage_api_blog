@@ -2,14 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
-use symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
-#[UniqueEntity('email')]
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -17,68 +14,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
-  #[ORM\Column(length: 255)]
-    #[Assert\NotBlank()]
-    #[Assert\Length(min:2,max:50)]
-    private ?string $fullName = null;
-
     #[ORM\Column(length: 180, unique: true)]
-   
-    #[Assert\NotBlank()]
-    #[Assert\Email()]
-    #[Assert\Length(min:2,max:180)]
+    #[Groups(['user:read'])]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Assert\NotNull()]
     private array $roles = [];
 
-   #[ORM\Column(length: 255)]
-    #[Assert\NotBlank()]
-    private ?string $phoneNumro = null;
+    #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
+    private ?string $name = null;
 
-    private ?string $plainPassword = null;
-    /**
-     * @var string 
-     */
-    #[ORM\Column]
-    #[Assert\NotBlank()]
+    #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $password = null;
-
-  
-
- 
+    private $plainPassword;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getPlainPassword(): ?string
-    {
-        return $this->plainPassword;
-    }
-
-    public function setPlainPassword(string $plainPassword): self
-    {
-        $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
-
-    public function getFullName(): ?string
-    {
-        return $this->fullName;
-    }
-
-    public function setFullName(string $fullName): self
-    {
-        $this->fullName = $fullName;
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -104,15 +65,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Méthode getUsername qui permet de retourner le champ qui est utilisé pour l'authentification.
-     *
-     * @return string
-     */
-    public function getUsername(): string {
-        return $this->getUserIdentifier();
-    }
-
-    /**
      * @see UserInterface
      */
     public function getRoles(): array
@@ -131,24 +83,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPhoneNumro(): ?string
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
     {
-        return $this->phoneNumro;
+        // If you store any temporary, sensitive data on the user, clear it here
+        $this->plainPassword = null;
     }
 
-    public function setPhoneNumro(string $phoneNumro): self
+    public function getName(): ?string
     {
-        $this->phoneNumro = $phoneNumro;
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
 
-    /**
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+  /**
+     *
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
-        return $this->password;
+        return  $this->password;
     }
 
     public function setPassword(string $password): self
@@ -158,16 +131,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
+    public function getPlainPassword(): ?string
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        return  $this->plainPassword;
     }
 
+    public function setplainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
-
-
+        return $this;
+    }
 }

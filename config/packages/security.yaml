@@ -1,5 +1,6 @@
 security:
   enable_authenticator_manager: true
+  # hide_user_not_found:false
   # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
   password_hashers:
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
@@ -11,30 +12,42 @@ security:
         class: App\Entity\User
         property: email
     # used to reload user from session & other features (e.g. switch_user)
+    # used to reload user from session & other features (e.g. switch_user)
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
-
-    login:
-      pattern: ^/api/login
-      stateless: true
-      json_login:
-        check_path: /api/login_check
-        success_handler: lexik_jwt_authentication.handler.authentication_success
-        failure_handler: lexik_jwt_authentication.handler.authentication_failure
-    api:
-      pattern: ^/api
-      stateless: true
-      jwt: ~
+    main:
+      lazy: true
+      custom_authenticator: App\Security\LoginFormAuthenticator
+      
+      
+      remember_me:
+           secret: '%kernel.secret%'
+           # always_remember_me: true
+           signature_properties: [password]
+    # login:
+    #   pattern: ^/api/login
+    #   stateless: true
+    #   json_login:
+    #     check_path: /api/login_check
+    #     success_handler: lexik_jwt_authentication.handler.authentication_success
+    #     failure_handler: lexik_jwt_authentication.handler.authentication_failure
+    #     username_path: email
+    #     password_path: password
+    # api:
+    #   pattern: ^/api
+    #   stateless: true
+    #   jwt: ~
 
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
 
   access_control:
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
-    - { path: ^/api/user, roles: PUBLIC_ACCESS }
-    - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/api/register, roles: PUBLIC_ACCESS }
+    # - { path: ^/api/posts, roles: PUBLIC_ACCESS }
+    # - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
   security:

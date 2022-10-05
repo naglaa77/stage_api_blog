@@ -2,40 +2,37 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Controller\BaseController;
 use Doctrine\ORM\EntityManagerInterface;
-use SebastianBergmann\CodeCoverage\Driver\Xdebug2NotEnabledException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Config\Builder\Method;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\validator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\serializer;
 
-class UserController extends AbstractController
+class UserController extends BaseController
 {
 
-    private $passwordHasher;
-
+  private $passwordHasher;
+    private $jwtManager;
+    private $tokenStorageInterface;
     public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
     }
-    
-    #[Route('/api/user', name: 'addUser',methods:['POST'])]
-    public function user(Request $request, SerializerInterface $serializer, EntityManagerInterface $em,ValidatorInterface $validator): JsonResponse 
-
+#[Route('/api/register', name: "app_user_api_me",methods: ['POST'])]
+   
+    public function apiMe(Request $request, SerializerInterface $serializer, EntityManagerInterface $em,ValidatorInterface $validator)
     {
-
+    //    return $this->json($this->getUser(), 200, [], [
+    //         'groups' => ['user:read']
+    //     ]);
         $jsonRecu = $request->getContent();
         
-
-        // $jsonRecu->setPassword();
         
         try {
                 $user = $serializer->deserialize($jsonRecu,User::class,'json');
@@ -49,17 +46,17 @@ class UserController extends AbstractController
 
                 $em->persist($user);
                 $em->flush();
-                return $this->json($user,201,[]);
+              
 
-        } catch(Xdebug2NotEnabledException $e) {
+        } catch(\Exception $ex) {
 
-            return $this->json([
-            'status'=> 400,
-            'message' =>$e->getMessage()
+        
+        return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
 
-            ],400);
 
         }
 
     }
+
+
 }
